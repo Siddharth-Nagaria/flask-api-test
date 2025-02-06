@@ -16,9 +16,17 @@ pipeline {
                 }
             }
         }
+        stage('Run Unit tests') {
+            steps {
+                echo 'Unit tests running'
+                script {
+                    sh 'pytest test_main.py'
+                }
+            }
+        }
         stage('Build Docker Image') {
             steps {
-                echo 'Building a docke Image'
+                echo 'Building a docker Image'
                 script{
                     sh 'docker build -t $IMAGE_NAME'
                 }
@@ -28,7 +36,7 @@ pipeline {
             steps {
                 echo 'Unit tests running'
                 script {
-                    sh 'docker run --rm $IMAGE_NAME pytest tests.py'
+                    sh 'docker run --rm $IMAGE_NAME pytest test_main.py'
                 }
             }
         }
