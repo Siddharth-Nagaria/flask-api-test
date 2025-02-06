@@ -20,14 +20,14 @@ pipeline {
 
             }
         }
-        // stage('Clone Repository') {
-        //     steps {
-        //         echo 'Cloning the repository'
-        //         script{
-        //             git 'https://github.com/Siddharth-Nagaria/flask-api-test.git'
-        //         }
-        //     }
-        // }
+        stage('Clone Repository') {
+            steps {
+                echo 'Cloning the repository'
+                script{
+                    git clone 'https://github.com/Siddharth-Nagaria/flask-api-test.git'
+                }
+            }
+        }
         stage('Run Unit tests') {
             steps {
                 echo 'Unit tests running'
