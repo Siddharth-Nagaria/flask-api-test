@@ -24,7 +24,7 @@ pipeline {
             steps {
                 echo 'Cloning the repository'
                 script{
-                    git clone 'https://github.com/Siddharth-Nagaria/flask-api-test.git'
+                    git 'https://github.com/Siddharth-Nagaria/flask-api-test.git'
                 }
             }
         }
