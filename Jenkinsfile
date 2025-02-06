@@ -8,6 +8,18 @@ pipeline {
     }
 
     stages {
+        stage('Checkout Code') {
+            steps {
+                checkout([$class: 'GitSCM', 
+                branches: [[name: '*/main']], 
+                userRemoteConfigs: [[
+                    url: 'https://github.com/Nirmalya-Mukherjee_biuuser/fs-services.git',
+                    credentialsId: 'nirmalya-git-creds'
+                ]]
+        ])
+
+            }
+        }
         stage('Clone Repository') {
             steps {
                 echo 'Cloning the repository'
