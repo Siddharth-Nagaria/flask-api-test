@@ -12,7 +12,7 @@ pipeline {
             steps {
                 echo 'Cloning the repoitory'
                 script{
-                    git 'https://github.com/Nirmalya-Mukherjee_biuuser/flask-tests.git'
+                    git 'https://github.com/Siddharth-Nagaria/flask-api-test.git'
                 }
             }
         }
