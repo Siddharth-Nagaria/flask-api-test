@@ -44,7 +44,7 @@ pipeline {
                 }
             }
         }
-        stage('Run Unit tests') {
+        stage('Run Unit tests under docker') {
             steps {
                 echo 'Unit tests running'
                 script {
