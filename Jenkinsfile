@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                echo 'Cloning the repoitory'
+                echo 'Cloning the repository'
                 script{
                     git 'https://github.com/Siddharth-Nagaria/flask-api-test.git'
                 }
