@@ -12,7 +12,7 @@ def test_landing_unit_test():
     response = app.test_client().get('/')
     assert response.status_code == 200
     assert b'Hi, Welcome to Unit testing' in response.data
-    logger.info(f"received response {response.data}")
+    logger.info(f"received response {response}")
 
 def test_login_unit_test():
     response = app.test_client().get('/login/sid')
