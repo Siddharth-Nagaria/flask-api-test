@@ -28,6 +28,11 @@ pipeline {
                 }
             }
         }
+        stage('Install Dependencies') {
+            steps {
+                sh 'pip install -r requirements.txt'
+            }
+        }
         stage('Run Unit tests') {
             steps {
                 echo 'Unit tests running'
