@@ -71,4 +71,13 @@ pipeline {
             }
         }
     }
+
+        post {
+            success {
+                echo "CD Pipeline successful! Docker Image running in the container"
+            }
+            failure {
+                echo "CD Pipeline failed!"
+        }
+    }
 }
