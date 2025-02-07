@@ -19,16 +19,18 @@ pipeline {
                 }
             }
         }
-        stage('Install Dependencies') {
+        // stage('Install Dependencies') {
+        //     steps {
+        //             sh 'pip install --upgrade pip'
+        //             sh 'pip install --no-user -r requirements.txt'
+        //     }
+        // }
+        stage('Installing Dependencies and Running Unit tests') {
             steps {
+                echo 'Installing unit tests and Running Unit tests'
+                script {
                     sh 'pip install --upgrade pip'
                     sh 'pip install --no-user -r requirements.txt'
-            }
-        }
-        stage('Run Unit tests') {
-            steps {
-                echo 'Unit tests running'
-                script {
                     sh 'pytest test_main.py'
                 }
             }
