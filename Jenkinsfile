@@ -31,15 +31,21 @@ pipeline {
                 }
             }
         }
-        stage('Install Dependencies') {
-            steps {
-                sh 'pip install -r requirements.txt'
+        stage('Setup Virtual Env and Install Dependencies') {
+        steps {
+            sh '''
+                python -m venv venv
+                source venv/bin/activate
+                pip install --upgrade pip
+                pip install -r requirements.txt
+            '''
             }
         }
         stage('Run Unit tests') {
             steps {
                 echo 'Unit tests running'
                 script {
+                    sh 'source venv/bin/activate'
                     sh 'pytest test_main.py'
                 }
             }
