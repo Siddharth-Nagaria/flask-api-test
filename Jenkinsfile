@@ -5,6 +5,7 @@ pipeline {
         APP_NAME ="flask-app"
         IMAGE_NAME = "flask-app:latest"
         CONTAINER_NAME = "flask-container"
+        VENV_DIR = "my_venv"
     }
 
     stages {
@@ -19,19 +20,18 @@ pipeline {
                 }
             }
         }
-        // stage('Install Dependencies') {
-        //     steps {
-        //             sh 'pip install --upgrade pip'
-        //             sh 'pip install --no-user -r requirements.txt'
-        //     }
-        // }
-        stage('Installing Dependencies and Running Unit tests') {
+        stage('Setup Virtual Environment and Install Dependencies') {
             steps {
-                echo 'Installing unit tests and Running Unit tests'
+                    sh 'python -m venv ${VENV_DIR}'
+                    sh './${VENV_DIR}/bin/pip install --upgrade pip'
+                    sh './${VENV_DIR}/bin/pip install -r requirements.txt'
+            }
+        }
+        stage('Run Unit tests') {
+            steps {
+                echo 'Unit tests running'
                 script {
-                    sh 'pip install --upgrade pip'
-                    sh 'pip install --no-user -r requirements.txt'
-                    sh 'pytest test_main.py'
+                    sh './${VENV_DIR}/bin/pytest test_main.py'
                 }
             }
         }
