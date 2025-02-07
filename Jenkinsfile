@@ -8,23 +8,23 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Code') {
-            steps {
-                checkout([$class: 'GitSCM', 
-                branches: [[name: '*/main']], 
-                userRemoteConfigs: [[
-                    url: 'https://github.com/Siddharth-Nagaria/flask-api-test.git',
-                    // credentialsId: 'nirmalya-git-creds'
-                ]]
-        ])
+        // stage('Checkout Code') {
+        //     steps {
+        //         checkout([$class: 'GitSCM', 
+        //         branches: [[name: '*/main']], 
+        //         userRemoteConfigs: [[
+        //             url: 'https://github.com/Siddharth-Nagaria/flask-api-test.git',
+        //             // credentialsId: 'nirmalya-git-creds'
+        //         ]]
+        // ])
 
-            }
-        }
+        //     }
+        // }
         stage('Clone Repository') {
             steps {
                 echo 'Cloning the repository'
                 script{
-                    git 'https://github.com/Siddharth-Nagaria/flask-api-test.git'
+                    sh 'git clone https://github.com/Siddharth-Nagaria/flask-api-test.git'
                 }
             }
         }
