@@ -21,7 +21,8 @@ pipeline {
         }
         stage('Install Dependencies') {
             steps {
-                sh 'pip install -r requirements.txt'
+                    sh 'pip install --upgrade pip'
+                    sh 'pip install --no-user -r requirements.txt'
             }
         }
         stage('Run Unit tests') {
