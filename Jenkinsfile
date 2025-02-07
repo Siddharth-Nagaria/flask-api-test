@@ -33,7 +33,7 @@ pipeline {
                 echo 'Unit tests running'
                 script {
                     sh 'cd flask-api-test'
-                    sh './${VENV_DIR}/bin/pytest test_main.py'
+                    sh './${VENV_DIR}/bin/pytest flask-api-test/tests/test_main.py'
                 }
             }
         }
