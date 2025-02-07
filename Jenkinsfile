@@ -22,6 +22,7 @@ pipeline {
         }
         stage('Setup Virtual Environment and Install Dependencies') {
             steps {
+                    sh 'cd flask-api-test'
                     sh 'python3 -m venv ${VENV_DIR}'
                     sh './${VENV_DIR}/bin/pip install --upgrade pip'
                     sh './${VENV_DIR}/bin/pip install -r requirements.txt'
@@ -31,6 +32,7 @@ pipeline {
             steps {
                 echo 'Unit tests running'
                 script {
+                    sh 'cd flask-api-test'
                     sh './${VENV_DIR}/bin/pytest test_main.py'
                 }
             }
