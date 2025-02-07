@@ -49,7 +49,7 @@ pipeline {
             steps {
                 echo 'Unit tests running'
                 script {
-                    sh 'docker run --rm ${IMAGE_NAME} pytest flask-api-test/tests/test_main.py'
+                    sh 'docker run --rm ${IMAGE_NAME} pytest tests/test_main.py'
                 }
             }
         }
