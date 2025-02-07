@@ -37,38 +37,38 @@ pipeline {
                 }
             }
         }
-        // stage('Build Docker Image') {
-        //     steps {
-        //         echo 'Building a docker Image'
-        //         script{
-        //             sh 'docker build -t $IMAGE_NAME'
-        //         }
-        //     }
-        // }
-        // stage('Run Unit tests under docker') {
-        //     steps {
-        //         echo 'Unit tests running'
-        //         script {
-        //             sh 'docker run --rm $IMAGE_NAME pytest test_main.py'
-        //         }
-        //     }
-        // }
+        stage('Build Docker Image') {
+            steps {
+                echo 'Building a docker Image'
+                script{
+                    sh 'docker build -t ${IMAGE_NAME} flask-api-test'
+                }
+            }
+        }
+        stage('Run Unit tests under docker') {
+            steps {
+                echo 'Unit tests running'
+                script {
+                    sh 'docker run --rm ${IMAGE_NAME} pytest flask-api-test/tests/test_main.py'
+                }
+            }
+        }
 
-        // stage('Stop Existing Container') {
-        //     steps {
-        //         script {
-        //             sh 'docker stop $CONTAINER_NAME || true'
-        //             sh 'docker rm $CONTAINER_NAME || true'
-        //         }
-        //     }
-        // }
+        stage('Stop Existing Container') {
+            steps {
+                script {
+                    sh 'docker stop ${CONTAINER_NAME} || true'
+                    sh 'docker rm ${CONTAINER_NAME} || true'
+                }
+            }
+        }
 
-        // stage('Deploy Container') {
-        //     steps {
-        //         script {
-        //             sh 'docker run -d -p 5000:5000 --name $CONTAINER_NAME $IMAGE_NAME'
-        //         }
-        //     }
-        // }
+        stage('Deploy Container') {
+            steps {
+                script {
+                    sh 'docker run -d -p 5000:5000 --name ${CONTAINER_NAME} ${IMAGE_NAME}'
+                }
+            }
+        }
     }
 }
