@@ -6,7 +6,7 @@ COPY requirements.txt ./
 # Install the required dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 # copy all the files
-COPY ./app/
+COPY . /app/
 # expose the application port
 EXPOSE 5000  
 # Set environment variables
