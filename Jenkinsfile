@@ -22,7 +22,7 @@ pipeline {
         }
         stage('Setup Virtual Environment and Install Dependencies') {
             steps {
-                    sh 'python -m venv ${VENV_DIR}'
+                    sh 'python3 -m venv ${VENV_DIR}'
                     sh './${VENV_DIR}/bin/pip install --upgrade pip'
                     sh './${VENV_DIR}/bin/pip install -r requirements.txt'
             }
