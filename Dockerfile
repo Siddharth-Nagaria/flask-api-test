@@ -1,5 +1,5 @@
 # use a base image
-FROM python:3.11
+FROM public.ecr.aws/docker/library/python:3.9
 # set the working directory
 WORKDIR /app
 COPY requirements.txt ./
