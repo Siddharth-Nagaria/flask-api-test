@@ -50,7 +50,7 @@ def test_handle_get_invalid_credentials():
 def test_handle_get_missing_credentials():
     response = app.test_client().get('/handle_get?username=&password=')
     assert response.status_code == 200
-    assert b'missing credentials!' in response.data
+    assert b'invalid credentials!' in response.data
     logger.info(f"Response data: {response.data.decode()}")
 
 def test_handle_post_valid_credentials():
@@ -68,6 +68,6 @@ def test_handle_post_invalid_credentials():
 def test_handle_post_missing_credentials():
     response = app.test_client().post('handle_post', data = {'username': '', 'password': ''})
     assert response.status_code == 200
-    assert b'missing credentials!' in response.data
+    assert b'invalid credentials!' in response.data
     logger.info(f"Response data: {response.data.decode()}")
 
