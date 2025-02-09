@@ -19,7 +19,7 @@ def test_login_unit_test():
     response = app.test_client().get('/login/sid')
     assert response.status_code == 200
     assert b'sid testing' in response.data
-    logger.info(f"Response data: {response.data.decode()}")
+    logger.info(f"Response data: {response.status_code}")
 
 
 def test_factorial_unit_test():
