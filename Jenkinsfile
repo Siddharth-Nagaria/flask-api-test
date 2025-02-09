@@ -33,7 +33,7 @@ pipeline {
                 echo 'Unit tests running'
                 script {
                     sh 'cd flask-api-test'
-                    sh './${VENV_DIR}/bin/pytest flask-api-test/tests/test_main.py'
+                    sh './${VENV_DIR}/bin/pytest flask-api-test/tests/test_main.py -s --log-cli-level=INFO'
                 }
             }
         }
@@ -72,12 +72,12 @@ pipeline {
         }
     }
 
-        post {
-            success {
-                echo "CD Pipeline successful! Docker Image running in the container"
-            }
-            failure {
-                echo "CD Pipeline failed!"
+    post {
+        success {
+            echo "CD Pipeline successful! Docker Image running in the container"
+        }
+        failure {
+            echo "CD Pipeline failed!"
         }
     }
 }
