@@ -80,7 +80,7 @@ pipeline {
             archiveArtifacts artifacts: 'pytest-report.xml', fingerprint: true
             junit 'pytest-report.xml'
             
-            withAWS(credentials: 'AKIAYO75D6AWQLUHP6H6', region: 'ap-south-1') {
+            withAWS(credentials: 'aws-credentials-uat', region: 'ap-south-1') {
             s3Upload(file: 'pytest-report.xml', bucket: '${S3_BUCKET}', path: 'mlops/flask-test-results/')
             }
         }
