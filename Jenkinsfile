@@ -35,7 +35,7 @@ pipeline {
                 script {
                     sh 'cd flask-api-test'
                     sh './${VENV_DIR}/bin/pytest flask-api-test/tests/test_main.py -s --log-cli-level=INFO'
-                    sh './${VENV_DIR}/bin/pytest --junitxml=pytest-report.xml'
+                    sh './${VENV_DIR}/bin/pytest flask-api-test/tests/test_main.py --junitxml=pytest-report.xml'
                 }
             }
         }
