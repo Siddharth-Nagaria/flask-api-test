@@ -6,6 +6,7 @@ pipeline {
         IMAGE_NAME = "flask-app:latest"
         CONTAINER_NAME = "flask-container"
         VENV_DIR = "my_venv"
+        S3_BUCKET = 'flask-test-api'
     }
 
     stages {
@@ -34,6 +35,7 @@ pipeline {
                 script {
                     sh 'cd flask-api-test'
                     sh './${VENV_DIR}/bin/pytest flask-api-test/tests/test_main.py -s --log-cli-level=INFO'
+                    sh './${VENV_DIR}/bin/pytest --junitxml=pytest-report.xml'
                 }
             }
         }
@@ -73,6 +75,15 @@ pipeline {
     }
 
     post {
+
+        // always {
+        //     archiveArtifacts artifacts: 'pytest-report.xml', fingerprint: true
+        //     junit 'pytest-report.xml'
+            
+        //     withAWS(credentials: 'AKIAYO75D6AWQLUHP6H6', region: 'ap-south-1') {
+        //     s3Upload(file: 'pytest-report.xml', bucket: '${S3_BUCKET}', path: 'test-reports/')
+        //     }
+        
         success {
             echo "CD Pipeline successful! Docker Image running in the container"
         }
