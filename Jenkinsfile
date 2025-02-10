@@ -81,7 +81,7 @@ pipeline {
             junit 'pytest-report.xml'
             
             withAWS(credentials: 'aws-credentials-uat', region: 'ap-south-1') {
-            s3Upload(file: 'pytest-report.xml', bucket: '${S3_BUCKET}', path: 'mlops/flask-test-results/')
+            s3Upload(file: 'pytest-report.xml', bucket: 'data-engg-uat', path: 'mlops/flask-test-results/')
             }
         }
         
