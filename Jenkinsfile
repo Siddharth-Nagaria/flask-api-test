@@ -83,6 +83,7 @@ pipeline {
             withAWS(credentials: 'AKIAYO75D6AWQLUHP6H6', region: 'ap-south-1') {
             s3Upload(file: 'pytest-report.xml', bucket: '${S3_BUCKET}', path: 'mlops/flask-test-results/')
             }
+        }
         
         success {
             echo "CD Pipeline successful! Docker Image running in the container"
