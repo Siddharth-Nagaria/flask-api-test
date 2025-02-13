@@ -1,4 +1,4 @@
-version: 1.0.0
+version: 1.0.1
 
 nginx:
   base_path: "C:/Users/80017206/Desktop/6M Intern/app"
