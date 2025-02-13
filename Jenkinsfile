@@ -6,7 +6,6 @@ pipeline {
         IMAGE_NAME = "flask-app:latest"
         CONTAINER_NAME = "flask-container"
         VENV_DIR = "my_venv"
-        S3_BUCKET = 'data-engg-uat'
     }
 
     stages {
