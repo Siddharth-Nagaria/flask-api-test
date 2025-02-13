@@ -96,7 +96,7 @@ pipeline {
     agent any
     
     environment {
-        CONFIG_FILE = 'nginx_config.yaml'
+        CONFIG_FILE = 'flask-api-test/nginx_config.yaml'
     }
 
     stages {
