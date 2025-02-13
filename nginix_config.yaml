@@ -1,0 +1,20 @@
+version: 1.0.0
+
+nginx:
+  base_path: "C:/Users/80017206/Desktop/6M Intern/app"
+  caller_application: python app.py  # Use this for Windows
+
+  server:
+    listen: 80
+    server_name: localhost
+
+    location /:
+      proxy_pass: http://127.0.0.1:5000;
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+
+    location /static/:
+      alias C:/Users/80017206/Desktop/6M Intern/app/static/;
+      autoindex off;
