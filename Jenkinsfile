@@ -157,7 +157,6 @@ pipeline {
             steps {
                 echo 'Building a docker Image'
                 script {
-                    IMAGE_NAME = IMAGE_NAME.toLowerCase()
                     sh "docker build -t ${IMAGE_NAME} flask-api-test"
                 }
             }
