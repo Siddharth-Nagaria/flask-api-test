@@ -96,7 +96,7 @@ pipeline {
     agent any
     
     environment {
-        CONFIG_FILE = 'flask-api-test/nginix_config.yaml'
+        CONFIG_FILE = 'nginix_config.yaml'
     }
 
     stages {
@@ -185,7 +185,11 @@ pipeline {
         stage('Deploy Container') {
             steps {
                 script {
-                    sh 'docker run -d -p 5000:5000 --name ${CONTAINER_NAME} ${IMAGE_NAME}'
+                    sh """
+                    docker ps --filter "publish=5000" -q | xargs -r docker stop
+                    docker ps -a --filter "publish=5000" -q | xargs -r docker rm
+                    docker run -d -p 5000:5000 --name ${CONTAINER_NAME} ${IMAGE_NAME}
+                    """
                 }
             }
         }
