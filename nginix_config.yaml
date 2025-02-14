@@ -2,10 +2,10 @@ version: 2.0.1
 
 jenkins:
   environment:
-    app_name: "${APP_NAME}"
-    image_name: "${IMAGE_NAME}"
-    container_name: "${CONTAINER_NAME}"
-    venv_dir: "${VENV_DIR}"
+    app_name: "flask_app"
+    image_name: "flask_image"
+    container_name: "flask_container"
+    venv_dir: "my_venv"
 
 nginx:
   base_path: "C:/Users/80017206/Desktop/6M Intern/app"
