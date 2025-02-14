@@ -157,7 +157,7 @@ pipeline {
             steps {
                 echo 'Building a docker Image'
                 script {
-                    sh 'docker build -t ${IMAGE_NAME.toLowerCase()} flask-api-test'
+                    sh 'docker build -t $IMAGE_NAME flask-api-test'
                 }
             }
         }
@@ -166,7 +166,7 @@ pipeline {
             steps {
                 echo 'Unit tests running under Docker'
                 script {
-                    sh 'docker run --rm ${IMAGE_NAME} pytest tests/test_main.py'
+                    sh 'docker run --rm $IMAGE_NAME pytest tests/test_main.py'
                 }
             }
         }
