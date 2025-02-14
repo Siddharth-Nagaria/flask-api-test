@@ -115,11 +115,11 @@ pipeline {
         stage('Load Config') {
             steps {
                 script {
-                    def config = readYaml file: "${CONFIG_FILE}"
-                    env.APP_NAME = config.nginx.jenkins.environment.app_name
-                    env.IMAGE_NAME = config.nginx.jenkins.environment.image_name
-                    env.CONTAINER_NAME = config.nginx.jenkins.environment.container_name
-                    env.VENV_DIR = config.nginx.jenkins.environment.venv_dir
+                def config = readYaml file: "${CONFIG_FILE}"
+                env.APP_NAME = config.jenkins.environment.app_name
+                env.IMAGE_NAME = config.jenkins.environment.image_name
+                env.CONTAINER_NAME = config.jenkins.environment.container_name
+                env.VENV_DIR = config.jenkins.environment.venv_dir
                 }
                 echo "App Name: ${APP_NAME}"
                 echo "Image Name: ${IMAGE_NAME}"
