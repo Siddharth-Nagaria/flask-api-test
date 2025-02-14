@@ -157,7 +157,7 @@ pipeline {
             steps {
                 echo 'Building a docker Image'
                 script {
-                    sh "docker build -t ${IMAGE_NAME} flask-api-test"
+                    sh 'docker build -t ${IMAGE_NAME} flask-api-test'
                 }
             }
         }
