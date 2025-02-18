@@ -107,7 +107,7 @@ for item in paths:
     }
 
 # Output the YAML to a file
-yaml_file_path = f"api_gateway_config_{vpc_id}.yaml"
+yaml_file_path = f"api_gateway_config.yaml"
 with open(yaml_file_path, 'w') as yaml_file:
     yaml.dump(yaml_data, yaml_file, default_flow_style=False)
 
