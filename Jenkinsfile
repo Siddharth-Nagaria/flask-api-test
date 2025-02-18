@@ -59,6 +59,44 @@ pipeline {
             }
         }
 
+        stage('YAML File generation'){
+            steps{
+                script {
+            // Creating the JSON file dynamically and generating YAML
+                    sh '''
+                        echo '{
+                            "paths": [
+                                {
+                                    "path": "/example-path",
+                                    "method": "GET",
+                                    "Description": "This is an example GET endpoint"
+                                },
+                                {
+                                    "path": "/example-path",
+                                    "method": "POST",
+                                    "Description": "This is an example POST endpoint"
+                                }
+                            ]
+                        }' > api_gateway_config.json
+
+                        cat api_gateway_config.json
+                        cat dynamic.py
+                        
+                        python3 dynamic.py api_gateway_config.json
+                        
+                        if [ -e "api_gateway_config.yaml" ]; then
+                            echo "YAML file Generated"
+                        else
+                            echo "YAML file not Generated"
+                        fi
+                        
+                        echo "Generated YAML Configuration file : api_gateway_config.yaml"
+                        cat api_gateway_config.yaml
+                     '''
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 echo 'Building a docker Image'
