@@ -1,5 +1,9 @@
 pipeline {
     agent any
+
+    parameters {
+        string(name: 'CI_BUILD_NUMBER', defaultValue: '', description: 'Build number from CI pipeline to deploy')
+    }
     
     environment {
         CONFIG_FILE = 'nginix_config.yaml'
@@ -64,7 +68,7 @@ pipeline {
                 script {
                     // Copy build artifacts from config-json job
                     copyArtifacts(
-                        projectName: 'config-json', 
+                        projectName: 'json-upload', 
                         selector: specific("${params.CI_BUILD_NUMBER}"),
                         filter: 'api-gateway-config.json'
                     )
