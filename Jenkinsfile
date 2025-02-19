@@ -69,7 +69,7 @@ pipeline {
                     // Copy build artifacts from config-json job
                     copyArtifacts(
                         projectName: 'json-upload', 
-                        selector: specific("${params.CI_BUILD_NUMBER}"),
+                        selector: lastSuccessful(),
                         filter: 'api-gateway-config.json'
                     )
                     
