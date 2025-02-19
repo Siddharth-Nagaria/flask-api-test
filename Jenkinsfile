@@ -59,26 +59,30 @@ pipeline {
             }
         }
 
+        stage('Load Build Artifacts') {
+            steps {
+                script {
+                    // Copy build artifacts from config-json job
+                    copyArtifacts(
+                        projectName: 'config-json', 
+                        selector: specific("${params.CI_BUILD_NUMBER}"),
+                        filter: 'api-gateway-config.json'
+                    )
+                    
+                    // Load build info JSON
+                    def buildInfo = readJSON file: 'api-gateway-config.json'
+                    echo "Loaded json configuration"
+                }
+            }
+        }
+
+
+
         stage('YAML File generation'){
             steps{
                 script {
             // Creating the JSON file dynamically and generating YAML
                     sh '''
-                        echo '{
-                            "paths": [
-                                {
-                                    "path": "/example-path",
-                                    "method": "GET",
-                                    "Description": "This is an example GET endpoint"
-                                },
-                                {
-                                    "path": "/example-path",
-                                    "method": "POST",
-                                    "Description": "This is an example POST endpoint"
-                                }
-                            ]
-                        }' > api_gateway_config.json
-
                         cat api_gateway_config.json
                         cat dynamic.py
                         
@@ -97,46 +101,46 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                echo 'Building a docker Image'
-                script {
-                    sh "docker build -t ${IMAGE_NAME} flask-api-test"
-                }
-            }
-        }
+    //     stage('Build Docker Image') {
+    //         steps {
+    //             echo 'Building a docker Image'
+    //             script {
+    //                 sh "docker build -t ${IMAGE_NAME} flask-api-test"
+    //             }
+    //         }
+    //     }
 
-        stage('Run Unit tests under Docker') {
-            steps {
-                echo 'Unit tests running under Docker'
-                script {
-                    sh 'docker run --rm $IMAGE_NAME pytest tests/test_main.py'
-                }
-            }
-        }
+    //     stage('Run Unit tests under Docker') {
+    //         steps {
+    //             echo 'Unit tests running under Docker'
+    //             script {
+    //                 sh 'docker run --rm $IMAGE_NAME pytest tests/test_main.py'
+    //             }
+    //         }
+    //     }
 
-        stage('Stop Existing Container') {
-            steps {
-                script {
-                    sh '''
-                        docker stop ${CONTAINER_NAME} || true
-                        docker rm ${CONTAINER_NAME} || true
-                    '''
-                }
-            }
-        }
+    //     stage('Stop Existing Container') {
+    //         steps {
+    //             script {
+    //                 sh '''
+    //                     docker stop ${CONTAINER_NAME} || true
+    //                     docker rm ${CONTAINER_NAME} || true
+    //                 '''
+    //             }
+    //         }
+    //     }
 
-        stage('Deploy Container') {
-            steps {
-                script {
-                    sh """
-                    docker ps --filter "publish=5000" -q | xargs -r docker stop
-                    docker ps -a --filter "publish=5000" -q | xargs -r docker rm
-                    docker run -d -p 5000:5000 --name ${CONTAINER_NAME} ${IMAGE_NAME}
-                    """
-                }
-            }
-        }
+    //     stage('Deploy Container') {
+    //         steps {
+    //             script {
+    //                 sh """
+    //                 docker ps --filter "publish=5000" -q | xargs -r docker stop
+    //                 docker ps -a --filter "publish=5000" -q | xargs -r docker rm
+    //                 docker run -d -p 5000:5000 --name ${CONTAINER_NAME} ${IMAGE_NAME}
+    //                 """
+    //             }
+    //         }
+    //     }
     }
 
     post {
