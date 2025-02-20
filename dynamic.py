@@ -29,30 +29,28 @@ for item in paths:
 
     # Construct the path and method structure
     yaml_data['paths'][path][method] = {
-        method: {
-            'responses': {
-                'default': {
+        'responses': {
+            'default': {
                     'description': f"Default response for {method.upper()} {path}"
                 }
-            },
-            'x-amazon-apigateway-integration': {
-                'responseParameters': {
-                    '200': {
-                        'remove:header.apigw': "''",
-                        'remove:header.server': "''",
-                        'remove:header.RequestId': "''",
-                        'remove:header.vary': "''"
-                    }
-                },
-                'payloadFormatVersion': "1.0",
-                'connectionId': vpc_id,
-                'type': "http_proxy",
-                'httpMethod': "ANY",
-                'uri': load_balancer_listener,
-                'timeoutInMillis': 30000,
-                'tlsConfig': {
-                    'serverNameToVerify': domain_name
+        },
+        'x-amazon-apigateway-integration': {
+            'responseParameters': {
+                '200': {
+                    'remove:header.apigw': "''",
+                    'remove:header.server': "''",
+                    'remove:header.RequestId': "''",
+                    'remove:header.vary': "''"
                 }
+            },
+            'payloadFormatVersion': "1.0",
+            'connectionId': vpc_id,
+            'type': "http_proxy",
+            'httpMethod': "ANY",
+            'uri': load_balancer_listener,
+            'timeoutInMillis': 30000,
+            'tlsConfig': {
+                    'serverNameToVerify': domain_name
             }
         }
     }
