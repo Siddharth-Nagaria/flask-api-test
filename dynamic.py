@@ -8,7 +8,7 @@ load_balancer_listener = os.getenv('LOAD_BALANCER_LISTNER', '__LOAD_BALANCER_LIS
 domain_name = os.getenv('DOMAIN_NAME', '__DOMAIN_NAME__')
 
 # Read the JSON configuration file
-with open('api_gateway_config.json') as file:
+with open('api-gateway-config.json') as file:
     config = json.load(file)
 
 # Extracting paths, method, type, and description
