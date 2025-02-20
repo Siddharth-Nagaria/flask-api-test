@@ -8,6 +8,8 @@ domain_name = os.getenv('DOMAIN_NAME','__DOMAIN_NAME__')
 stack_name = os.getenv('STACK_NAME','__STACK_NAME__')
 
 
+# The substituted values need to be removed once the variables are initialized
+
 if vpc_id is None:
     raise ValueError("vpc_id not found")
 
