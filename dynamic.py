@@ -34,25 +34,25 @@ for item in paths:
         yaml_data['paths'][path] = {}
 
     # Construct the path and method structure
-    yaml_data['paths'][path][method] = OrderedDict({
-        'responses': OrderedDict({
+    yaml_data['paths'][path][method] ={
+        'responses': {
             'default': {
                     'description': f"Default response for {method.upper()} {path}"
                 }
-        }),
+        },
         'x-amazon-apigateway-integration':OrderedDict({
-            'responseParameters': OrderedDict({
+            'responseParameters': {
                 str(code): {
                     'remove:header.apigw': "''",
                     'remove:header.server': "''",
                     'remove:header.RequestId': "''",
                     'remove:header.vary': "''"
                 } for code in response_codes
-            }),
-            'requestParameters' : OrderedDict({
+            },
+            'requestParameters' : {
             'append:header.username' : '$context.authorizer.username',
             'overwrite:path' : path
-            }),
+            },
             'payloadFormatVersion': "1.0",
             'connectionId': vpc_id,
             'type': "http_proxy",
@@ -63,7 +63,7 @@ for item in paths:
                     'serverNameToVerify': domain_name
             }
         })
-    })
+    }
 
 # Output the YAML to a file
 yaml_file_path = f"api-gateway-config.yaml"
