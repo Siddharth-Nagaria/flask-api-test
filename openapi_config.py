@@ -1,8 +1,24 @@
 import json
 import os
 import yaml
-from collections import OrderedDict
 
+vpc_id = os.getenv('CONNECTION_ID','__VPC_ID__')
+load_balancer_listener = os.getenv('LOAD_BALANCER_LISTNER', '__LOAD_BALANCER_LISTNER__')
+domain_name = os.getenv('DOMAIN_NAME','__DOMAIN_NAME__')
+stack_name = os.getenv('STACK_NAME','__STACK_NAME__')
+
+
+if vpc_id is None:
+    raise ValueError("vpc_id not found")
+
+if load_balancer_listener is None:
+    raise ValueError("load_balancer_listener not found")
+
+if domain_name is None:
+    raise ValueError("domain_name not found")
+
+if stack_name is None:
+    raise ValueError("stack_name not found")
 
 # Read the JSON configuration file
 with open('api-gateway-config.json') as file:
@@ -35,7 +51,7 @@ for item in paths:
                     'description': f"Default response for {method.upper()} {path}"
                 }
         },
-        **({'security': [ { "openapi_config": [] } ]} if path_type == 'External' else {}),
+        **({'security': [ { "fs_services_dynamic_auth": [] } ]} if path_type == 'External' else {}),
         'x-amazon-apigateway-integration':{
             'responseParameters': {
                 str(code): {
@@ -47,20 +63,39 @@ for item in paths:
             },
             'requestParameters' : {
             'append:header.username' : '$context.authorizer.username',
-            'overwrite:path' : path
+            'overwrite:path' : '$request.path'
             },
             'payloadFormatVersion': "1.0",
-            'connectionId': 'zblprn',
+            'connectionId': vpc_id,
             'type': "http_proxy",
             'httpMethod': "ANY",
-            'uri': 'arn:aws:elasticloadbalancing:ap-south-1:581962035245:listener/app/fs-services-jenkins-v2-ALB/d51ecb12b6abeb19/febb90681043995b',
+            'uri': load_balancer_listener,
             'connectionType':"VPC_LINK",
             'timeoutInMillis': 30000,
             'tlsConfig': {
-                    'serverNameToVerify': 'biuuatapi.piramalfinance.com'
+                    'serverNameToVerify': domain_name
             }
         }
     }
+
+
+yaml_data["components"] = {
+    "securitySchemes": {
+        f"{stack_name}_dynamic_auth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "x-amazon-apigateway-authorizer": {
+                "identitySource": "$request.header.Authorization",
+                "authorizerUri": "arn:aws:apigateway:ap-south-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-south-1:581962035245:function:validate_dynamic_bearer_token/invocations",
+                "authorizerPayloadFormatVersion": "2.0",
+                "authorizerResultTtlInSeconds": 0,
+                "type": "request",
+                "enableSimpleResponses": False
+            }
+        }
+    }
+}
 
 # Output the YAML to a file
 yaml_file_path = f"api-gateway-config.yaml"
