@@ -34,7 +34,37 @@ paths = config['paths']
 
 # Prepare the YAML structure
 yaml_data = {
-    'paths': {}
+    "openapi" : "3.0.1",
+    "info" : {
+    "title" : "fs-services-openapi",
+    "version" : "2024-04-16 09:09:37UTC"
+    },
+    "servers" : [ {
+    "url" : "https://0npupm7ztb.execute-api.ap-south-1.amazonaws.com/{basePath}",
+    "variables" : {
+      "basePath" : {
+        "default" : ""
+        }
+        }
+     } ],
+    'paths': {},
+    'components':{
+    "securitySchemes": {
+            f"{stack_name}_dynamic_auth": {
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header",
+                "x-amazon-apigateway-authorizer": {
+                    "identitySource": "$request.header.Authorization",
+                    "authorizerUri": "arn:aws:apigateway:ap-south-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-south-1:581962035245:function:validate_dynamic_bearer_token/invocations",
+                    "authorizerPayloadFormatVersion": "2.0",
+                    "authorizerResultTtlInSeconds": 0,
+                    "type": "request",
+                    "enableSimpleResponses": False
+                }
+            }
+        }
+    }
 }
 
 for item in paths:
@@ -81,23 +111,23 @@ for item in paths:
     }
 
 
-yaml_data["components"] = {
-    "securitySchemes": {
-        f"{stack_name}_dynamic_auth": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header",
-            "x-amazon-apigateway-authorizer": {
-                "identitySource": "$request.header.Authorization",
-                "authorizerUri": "arn:aws:apigateway:ap-south-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-south-1:581962035245:function:validate_dynamic_bearer_token/invocations",
-                "authorizerPayloadFormatVersion": "2.0",
-                "authorizerResultTtlInSeconds": 0,
-                "type": "request",
-                "enableSimpleResponses": False
-            }
-        }
-    }
-}
+# yaml_data["components"] = {
+#     "securitySchemes": {
+#         f"{stack_name}_dynamic_auth": {
+#             "type": "apiKey",
+#             "name": "Authorization",
+#             "in": "header",
+#             "x-amazon-apigateway-authorizer": {
+#                 "identitySource": "$request.header.Authorization",
+#                 "authorizerUri": "arn:aws:apigateway:ap-south-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-south-1:581962035245:function:validate_dynamic_bearer_token/invocations",
+#                 "authorizerPayloadFormatVersion": "2.0",
+#                 "authorizerResultTtlInSeconds": 0,
+#                 "type": "request",
+#                 "enableSimpleResponses": False
+#             }
+#         }
+#     }
+# }
 
 # Output the YAML to a file
 yaml_file_path = f"api-gateway-config.yaml"
