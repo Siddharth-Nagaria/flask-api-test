@@ -132,6 +132,6 @@ for item in paths:
 # Output the YAML to a file
 yaml_file_path = f"api-gateway-config.yaml"
 with open(yaml_file_path, 'w') as yaml_file:
-    yaml.dump(yaml_data, yaml_file, default_flow_style=False)
+    yaml.dump(yaml_data, yaml_file, default_flow_style=False, sort_keys=False)
 
 print(f"YAML file '{yaml_file_path}' generated successfully.")
