@@ -11,6 +11,8 @@ domain_name = os.getenv('DOMAIN_NAME', '__DOMAIN_NAME__')
 with open('api-gateway-config.json') as file:
     config = json.load(file)
 
+response_codes = [200,201,400,500,204,403]
+
 # Extracting paths, method, type, and description
 paths = config['paths']
 
@@ -36,12 +38,12 @@ for item in paths:
         },
         'x-amazon-apigateway-integration': {
             'responseParameters': {
-                '200': {
+                str(code): {
                     'remove:header.apigw': "''",
                     'remove:header.server': "''",
                     'remove:header.RequestId': "''",
                     'remove:header.vary': "''"
-                }
+                } for code in response_codes
             },
             'payloadFormatVersion': "1.0",
             'connectionId': vpc_id,
