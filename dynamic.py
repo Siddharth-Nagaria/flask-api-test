@@ -29,6 +29,7 @@ for item in paths:
     path = item['path']
     method = item['method'].lower()
     description = item['Description']
+    path_type = item['Type']
 
     if path not in yaml_data['paths']:
         yaml_data['paths'][path] = {}
@@ -40,6 +41,7 @@ for item in paths:
                     'description': f"Default response for {method.upper()} {path}"
                 }
         },
+        **({'security': [ { "openapi_config": [] } ]} if path_type == 'External' else {}),
         'x-amazon-apigateway-integration':{
             'responseParameters': {
                 str(code): {
