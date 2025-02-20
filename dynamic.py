@@ -40,7 +40,7 @@ for item in paths:
                     'description': f"Default response for {method.upper()} {path}"
                 }
         },
-        'x-amazon-apigateway-integration':OrderedDict({
+        'x-amazon-apigateway-integration':{
             'responseParameters': {
                 str(code): {
                     'remove:header.apigw': "''",
@@ -62,7 +62,7 @@ for item in paths:
             'tlsConfig': {
                     'serverNameToVerify': domain_name
             }
-        })
+        }
     }
 
 # Output the YAML to a file
