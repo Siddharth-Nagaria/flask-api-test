@@ -88,9 +88,9 @@ pipeline {
             // Creating the JSON file dynamically and generating YAML
                     sh '''
                         cat api-gateway-config.json
-                        cat dynamic.py
+                        cat openapi_config.py.py
                         
-                        python3 dynamic.py api-gateway-config.json
+                        python3 openapi_config.py api-gateway-config.json
                         
                         if [ -e "api-gateway-config.yaml" ]; then
                             echo "YAML file Generated"
