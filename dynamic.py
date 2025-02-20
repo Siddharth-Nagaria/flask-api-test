@@ -4,12 +4,6 @@ import yaml
 from collections import OrderedDict
 
 
-
-# Retrieve environment variables
-vpc_id = os.getenv('CONNECTION_ID', '__VPC_ID__')
-load_balancer_listener = os.getenv('LOAD_BALANCER_LISTNER', '__LOAD_BALANCER_LISTNER__')
-domain_name = os.getenv('DOMAIN_NAME', '__DOMAIN_NAME__')
-
 # Read the JSON configuration file
 with open('api-gateway-config.json') as file:
     config = json.load(file)
@@ -56,13 +50,14 @@ for item in paths:
             'overwrite:path' : path
             },
             'payloadFormatVersion': "1.0",
-            'connectionId': vpc_id,
+            'connectionId': 'zblprn',
             'type': "http_proxy",
             'httpMethod': "ANY",
-            'uri': load_balancer_listener,
+            'uri': 'arn:aws:elasticloadbalancing:ap-south-1:581962035245:listener/app/fs-services-jenkins-v2-ALB/d51ecb12b6abeb19/febb90681043995b',
+            'connectionType':"VPC_LINK",
             'timeoutInMillis': 30000,
             'tlsConfig': {
-                    'serverNameToVerify': domain_name
+                    'serverNameToVerify': 'biuuatapi.piramalfinance.com'
             }
         }
     }
