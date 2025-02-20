@@ -11,6 +11,7 @@ domain_name = os.getenv('DOMAIN_NAME', '__DOMAIN_NAME__')
 with open('api-gateway-config.json') as file:
     config = json.load(file)
 
+# response codes listed here
 response_codes = [200,201,400,500,204,403]
 
 # Extracting paths, method, type, and description
@@ -44,6 +45,10 @@ for item in paths:
                     'remove:header.RequestId': "''",
                     'remove:header.vary': "''"
                 } for code in response_codes
+            },
+            'requestParameters' : {
+            'append:header.username' : '$context.authorizer.username',
+            'overwrite:path' : path
             },
             'payloadFormatVersion': "1.0",
             'connectionId': vpc_id,
