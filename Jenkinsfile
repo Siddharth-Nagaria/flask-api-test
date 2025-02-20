@@ -88,7 +88,7 @@ pipeline {
             // Creating the JSON file dynamically and generating YAML
                     sh '''
                         cat api-gateway-config.json
-                        cat openapi_config.py.py
+                        cat openapi_config.py
                         
                         python3 openapi_config.py api-gateway-config.json
                         
