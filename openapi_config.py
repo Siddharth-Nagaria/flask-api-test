@@ -51,7 +51,7 @@ for item in paths:
                     'description': f"Default response for {method.upper()} {path}"
                 }
         },
-        **({'security': [ { "fs_services_dynamic_auth": [] } ]} if path_type == 'External' else {}),
+        **({'security': [ { f"{stack_name}_dynamic_auth": [] } ]} if path_type == 'External' else {}),
         'x-amazon-apigateway-integration':{
             'responseParameters': {
                 str(code): {
