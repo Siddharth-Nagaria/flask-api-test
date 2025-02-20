@@ -24,8 +24,11 @@ for item in paths:
     method = item['method'].lower()
     description = item['Description']
 
+    if path not in yaml_data['paths']:
+        yaml_data['paths'][path] = {}
+
     # Construct the path and method structure
-    yaml_data['paths'][path] = {
+    yaml_data['paths'][path][method] = {
         method: {
             'responses': {
                 'default': {
