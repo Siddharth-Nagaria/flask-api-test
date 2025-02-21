@@ -127,7 +127,7 @@ pipeline {
                         """
 
                         def response = sh(
-                            script: """curl -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} -X POST -H "Content-Type: application/json" -d '${repoConfig}' ${NEXUS_URL}/service/rest/v1/repositories/raw/hosted""",
+                            script: """curl -u "${NEXUS_USERNAME}:${NEXUS_PASS}" -X POST -H "Content-Type: application/json" -d '${repoConfig}' "${NEXUS_URL}/service/rest/v1/repositories/raw/hosted" """,
                             returnStatus: true
                         )
 
