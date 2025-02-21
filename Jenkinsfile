@@ -110,12 +110,32 @@ pipeline {
             steps {
                 script {
                     withCredentials([
-                        usernamePassword(credentialsId: "nexus-credentials", usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD'),
-                        file(credentialsId: 'nexus-certificate', variable: 'CA_CERT_PATH')])
+                        usernamePassword(credentialsId: "nexus-credentials", usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')
                     {
+                        // def jsonFile = 'repoConfig.json'
+                        // writeFile file: jsonFile, text: """
+                        // {
+                        //     "name": "${REPO_NAME}",
+                        //     "online": true,
+                        //     "storage": {
+                        //         "blobStoreName": "default",
+                        //         "strictContentTypeValidation": true,
+                        //         "writePolicy": "ALLOW"
+                        //     }
+                        // }
+                        // """
 
-                        def jsonFile = 'repoConfig.json'
-                        writeFile file: jsonFile, text: """
+                        //     def apiUrl = "${NEXUS_URL}/service/rest/v1/repositories/raw/hosted"
+                        //     def response = sh(
+                        //     script: """curl -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -X POST -H "Content-Type: application/json" --data @${jsonFile} "$apiUrl" """,
+                        //     returnStatus: true
+                        // )
+
+                        // if (response != 0) {
+                        //     echo "Repository ${REPO_NAME} might already exist."
+                        // }
+
+                        def repoConfig = """
                         {
                             "name": "${REPO_NAME}",
                             "online": true,
@@ -127,14 +147,23 @@ pipeline {
                         }
                         """
 
-                            def apiUrl = "${NEXUS_URL}/service/rest/v1/repositories/raw/hosted"
-                            def response = sh(
-                            script: """curl -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -X POST -H "Content-Type: application/json" --data @${jsonFile} "$apiUrl" """,
-                            returnStatus: true
-                        )
+                        def apiUrl = "${NEXUS_URL}/service/rest/v1/repositories/raw/hosted"
 
-                        if (response != 0) {
-                            echo "Repository ${REPO_NAME} might already exist."
+                        def connection = new URL(apiUrl).openConnection()
+                        connection.setRequestMethod("POST")
+                        connection.setRequestProperty("Content-Type", "application/json")
+                        connection.setRequestProperty("Authorization", "Basic " + "${NEXUS_USERNAME}:${NEXUS_PASSWORD}".bytes.encodeBase64().toString())
+                        connection.setDoOutput(true)
+
+                        connection.outputStream.withWriter("UTF-8") { it.write(repoConfig) }
+
+                        def responseCode = connection.responseCode
+                        echo "Nexus API Response Code: ${responseCode}"
+
+                        if (responseCode != 201) {
+                            error("Failed to create repository. Nexus API returned HTTP code: ${responseCode}")
+                        } else {
+                            echo "Repository created successfully!"
                         }
                     }
                 }
