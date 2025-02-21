@@ -7,7 +7,7 @@ pipeline {
     
     environment {
         CONFIG_FILE = 'nginix_config.yaml'
-        NEXUS_URL = 'https://nexusbiuprod.piramal.com/'
+        NEXUS_URL = "https://nexusbiuprod.piramal.com/"
         STACK_NAME = "stack_name"
         // STACK_NAME later to be exracted from environment variables 
         REPO_NAME = "openapi-config"
@@ -114,7 +114,8 @@ pipeline {
                         file(credentialsId: 'nexus-certificate', variable: 'CA_CERT_PATH')])
                     {
 
-                        def repoConfig = """
+                        def jsonFile = 'repoConfig.json'
+                        writeFile file: jsonFile, text: """
                         {
                             "name": "${REPO_NAME}",
                             "online": true,
@@ -126,8 +127,9 @@ pipeline {
                         }
                         """
 
-                        def response = sh(
-                            script: """curl -u "${NEXUS_USERNAME}:${NEXUS_PASSWORD}" -X POST -H "Content-Type: application/json" -d '${repoConfig}' "${NEXUS_URL}/service/rest/v1/repositories/raw/hosted" """,
+                            def apiUrl = "${NEXUS_URL}/service/rest/v1/repositories/raw/hosted"
+                            def response = sh(
+                            script: """curl -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -X POST -H "Content-Type: application/json" --data @${jsonFile} "$apiUrl" """,
                             returnStatus: true
                         )
 
