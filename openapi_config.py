@@ -2,25 +2,17 @@ import json
 import os
 import yaml
 
-vpc_id = os.getenv('CONNECTION_ID','__VPC_ID__')
-load_balancer_listener = os.getenv('LOAD_BALANCER_LISTNER', '__LOAD_BALANCER_LISTNER__')
-domain_name = os.getenv('DOMAIN_NAME','__DOMAIN_NAME__')
+vpc_id = '__VPC_ID__'
+load_balancer_listener = '__LOAD_BALANCER_LISTNER__'
+domain_name = '__DOMAIN_NAME__'
+url = '__url__'
 stack_name = os.getenv('STACK_NAME','__STACK_NAME__')
 
 
 # The substituted values need to be removed once the variables are initialized
-
-if vpc_id is None:
-    raise ValueError("vpc_id not found")
-
-if load_balancer_listener is None:
-    raise ValueError("load_balancer_listener not found")
-
-if domain_name is None:
-    raise ValueError("domain_name not found")
-
 if stack_name is None:
     raise ValueError("stack_name not found")
+
 
 # Read the JSON configuration file
 with open('api-gateway-config.json') as file:
@@ -40,7 +32,7 @@ yaml_data = {
     "version" : "2024-04-16 09:09:37UTC"
     },
     "servers" : [ {
-    "url" : "https://0npupm7ztb.execute-api.ap-south-1.amazonaws.com/{basePath}",
+    "url" : url,
     "variables" : {
       "basePath" : {
         "default" : ""
