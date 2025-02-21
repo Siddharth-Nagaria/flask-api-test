@@ -110,7 +110,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([
-                        usernamePassword(credentialsId: "nexus-credentials", usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')
+                        usernamePassword(credentialsId: "nexus-credentials", usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')])
                     {
                         // def jsonFile = 'repoConfig.json'
                         // writeFile file: jsonFile, text: """
