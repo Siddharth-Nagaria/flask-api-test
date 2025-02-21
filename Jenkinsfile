@@ -134,8 +134,44 @@ pipeline {
                         // if (response != 0) {
                         //     echo "Repository ${REPO_NAME} might already exist."
                         // }
+                        
 
-                        def repoConfig = """
+
+                        // method not allowed
+                        // def repoConfig = """
+                        // {
+                        //     "name": "${REPO_NAME}",
+                        //     "online": true,
+                        //     "storage": {
+                        //         "blobStoreName": "default",
+                        //         "strictContentTypeValidation": true,
+                        //         "writePolicy": "ALLOW"
+                        //     }
+                        // }
+                        // """
+
+                        // def apiUrl = "${NEXUS_URL}/service/rest/v1/repositories/raw/hosted"
+
+                        // def connection = new URL(apiUrl).openConnection()
+                        // connection.setRequestMethod("POST")
+                        // connection.setRequestProperty("Content-Type", "application/json")
+                        // connection.setRequestProperty("Authorization", "Basic " + "${NEXUS_USERNAME}:${NEXUS_PASSWORD}".bytes.encodeBase64().toString())
+                        // connection.setDoOutput(true)
+
+                        // connection.outputStream.withWriter("UTF-8") { it.write(repoConfig) }
+
+                        // def responseCode = connection.responseCode
+                        // echo "Nexus API Response Code: ${responseCode}"
+
+                        // if (responseCode != 201) {
+                        //     error("Failed to create repository. Nexus API returned HTTP code: ${responseCode}")
+                        // } else {
+                        //     echo "Repository created successfully!"
+                        // }
+
+
+                        def jsonFile = 'repoConfig.json'
+                        writeFile file: jsonFile, text: """
                         {
                             "name": "${REPO_NAME}",
                             "online": true,
@@ -149,19 +185,22 @@ pipeline {
 
                         def apiUrl = "${NEXUS_URL}/service/rest/v1/repositories/raw/hosted"
 
-                        def connection = new URL(apiUrl).openConnection()
-                        connection.setRequestMethod("POST")
-                        connection.setRequestProperty("Content-Type", "application/json")
-                        connection.setRequestProperty("Authorization", "Basic " + "${NEXUS_USERNAME}:${NEXUS_PASSWORD}".bytes.encodeBase64().toString())
-                        connection.setDoOutput(true)
+                        echo "Sending API request to: $apiUrl"
+                        // Execute the command and capture the HTTP response code directly
+                        def httpCode = sh(
+                            script: """
+                            set -x
+                            http_code=\$(curl -u "$NEXUS_USERNAME:$NEXUS_PASSWORD" -X POST -H "Content-Type: application/json" --data @${jsonFile} "$apiUrl" -o response.txt -w "%{http_code}")
+                            echo "\$http_code" > http_code.txt
+                            """,
+                            returnStatus: false
+                        )
 
-                        connection.outputStream.withWriter("UTF-8") { it.write(repoConfig) }
+                        def responseCode = readFile('http_code.txt').trim()
+                        echo "Nexus API Response Code: $responseCode"
 
-                        def responseCode = connection.responseCode
-                        echo "Nexus API Response Code: ${responseCode}"
-
-                        if (responseCode != 201) {
-                            error("Failed to create repository. Nexus API returned HTTP code: ${responseCode}")
+                        if (responseCode != "201") {
+                            error("Failed to create repository. Nexus API returned HTTP code: $responseCode")
                         } else {
                             echo "Repository created successfully!"
                         }
