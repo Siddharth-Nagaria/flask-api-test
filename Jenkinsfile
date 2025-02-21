@@ -142,20 +142,22 @@ pipeline {
 
         stage('Upload to Raw repo ') {
             steps {
-            withCredentials([
-                    usernamePassword(credentialsId: "nexus-credentials", usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD'),
-                    file(credentialsId: 'nexus-certificate', variable: 'CA_CERT_PATH')
-                ]) {
-                    def YAML_FILE = "api-gateway-config.yaml"
-                    def folder = "${STACK_NAME}-openapi-config"
-                    def filePath = "${folder}/${YAML_FILE}"  // Creates a folder with stack name
-                    
-                    sh """
-                    curl -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} --upload-file ${YAML_FILE} ${NEXUS_URL}/repository/${REPO_NAME}/${filePath}
-                    """
+                script{
+                    withCredentials([
+                        usernamePassword(credentialsId: "nexus-credentials", usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD'),
+                        file(credentialsId: 'nexus-certificate', variable: 'CA_CERT_PATH')
+                    ]) {
+                        def YAML_FILE = "api-gateway-config.yaml"
+                        def folder = "${STACK_NAME}-openapi-config"
+                        def filePath = "${folder}/${YAML_FILE}"  // Creates a folder with stack name
+                        
+                        sh """
+                        curl -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} --upload-file ${YAML_FILE} ${NEXUS_URL}/repository/${REPO_NAME}/${filePath}
+                        """
 
-                    echo "Uploaded ${YAML_FILE} to Nexus at ${NEXUS_URL}/repository/${REPO_NAME}/${filePath}"
+                        echo "Uploaded ${YAML_FILE} to Nexus at ${NEXUS_URL}/repository/${REPO_NAME}/${filePath}"
 
+                    }
                 }
             }
         }
