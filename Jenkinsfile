@@ -140,7 +140,7 @@ pipeline {
         }
 
 
-        stage('Upload to PyPI') {
+        stage('Upload to Raw repo ') {
             steps {
             withCredentials([
                     usernamePassword(credentialsId: "nexus-credentials", usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD'),
