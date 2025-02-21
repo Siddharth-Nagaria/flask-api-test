@@ -7,6 +7,10 @@ pipeline {
     
     environment {
         CONFIG_FILE = 'nginix_config.yaml'
+        NEXUS_URL = 'https://nexusbiuprod.piramal.com/'
+        STACK_NAME = "stack_name"
+        // STACK_NAME later to be exracted from environment variables 
+        REPO_NAME = "openapi-config"
     }
 
     stages {
@@ -87,9 +91,6 @@ pipeline {
                 script {
             // Creating the JSON file dynamically and generating YAML
                     sh '''
-                        cat api-gateway-config.json
-                        cat openapi_config.py
-                        
                         python3 openapi_config.py api-gateway-config.json
                         
                         if [ -e "api-gateway-config.yaml" ]; then
@@ -104,6 +105,63 @@ pipeline {
                 }
             }
         }
+
+        stage('Create Raw Repository') {
+            steps {
+                script {
+                    withCredentials([
+                        usernamePassword(credentialsId: "nexus-credentials", usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD'),
+                        file(credentialsId: 'nexus-certificate', variable: 'CA_CERT_PATH')])
+                    {
+
+                        def repoConfig = """
+                        {
+                            "name": "${REPO_NAME}",
+                            "online": true,
+                            "storage": {
+                                "blobStoreName": "default",
+                                "strictContentTypeValidation": true,
+                                "writePolicy": "ALLOW"
+                            }
+                        }
+                        """
+
+                        def response = sh(
+                            script: """curl -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} -X POST -H "Content-Type: application/json" -d '${repoConfig}' ${NEXUS_URL}/service/rest/v1/repositories/raw/hosted""",
+                            returnStatus: true
+                        )
+
+                        if (response != 0) {
+                            echo "Repository ${REPO_NAME} might already exist."
+                        }
+                    }
+                }
+            }
+        }
+
+
+        stage('Upload to PyPI') {
+            steps {
+            withCredentials([
+                    usernamePassword(credentialsId: "nexus-credentials", usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD'),
+                    file(credentialsId: 'nexus-certificate', variable: 'CA_CERT_PATH')
+                ]) {
+                    def YAML_FILE = "api-gateway-config.yaml"
+                    def folder = "${STACK_NAME}-openapi-config"
+                    def filePath = "${folder}/${YAML_FILE}"  // Creates a folder with stack name
+                    
+                    sh """
+                    curl -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} --upload-file ${YAML_FILE} ${NEXUS_URL}/repository/${REPO_NAME}/${filePath}
+                    """
+
+                    echo "Uploaded ${YAML_FILE} to Nexus at ${NEXUS_URL}/repository/${REPO_NAME}/${filePath}"
+
+                }
+            }
+        }
+
+
+
 
     //     stage('Build Docker Image') {
     //         steps {
