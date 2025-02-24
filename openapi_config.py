@@ -56,6 +56,19 @@ yaml_data = {
                 }
             }
         }
+    },
+    "x-amazon-apigateway-cors": {
+        "allowMethods":
+         "*",
+        "allowHeaders":
+         "*",
+        "exposeHeaders":
+         "*",
+        "maxAge": 0,
+        "allowCredentials": False,
+        "allowOrigins":
+         "*",
+        "x-amazon-apigateway-importexport-version": "1.0"
     }
 }
 
